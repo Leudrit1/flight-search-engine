@@ -1,11 +1,10 @@
 /**
- * Centralized flight data fetching - single source of truth for API layer
- * Uses Amadeus when credentials are configured, otherwise falls back to mock data
+ * Centralized flight data fetching - single source of truth for API layer.
+ * Uses Amadeus when credentials are configured; otherwise returns no flights.
  */
 import type { FlightOffer } from '@/types/flight'
 import type { SearchParams } from '@/types/flight'
 import { searchFlights } from './amadeus'
-import { generateMockFlights } from './mockData'
 import { transformAmadeusToFlightOffer } from './transformers'
 
 const clientId = import.meta.env.VITE_AMADEUS_CLIENT_ID
@@ -50,12 +49,9 @@ export async function fetchFlights(params: SearchParams): Promise<SearchResult> 
     }
   }
 
-  const flights = generateMockFlights(
-    params.origin,
-    params.destination,
-    params.departureDate,
-    params.returnDate
-  )
-
-  return { flights, source: 'mock' }
+  return {
+    flights: [],
+    error: 'Live flight API is not configured for this environment.',
+    source: 'mock',
+  }
 }
