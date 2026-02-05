@@ -40,9 +40,7 @@ function App() {
           setRecentSearches(parsed)
         }
       }
-    } catch {
-      // ignore localStorage errors
-    }
+    } catch {}
   }, [])
 
   const handleSearch = (params: SearchParams) => {
@@ -68,9 +66,7 @@ function App() {
 
       try {
         localStorage.setItem('flight_recent_searches', JSON.stringify(next))
-      } catch {
-        // ignore storage errors
-      }
+      } catch {}
 
       return next
     })
@@ -135,7 +131,6 @@ function App() {
                 alignItems: 'flex-start',
               }}
             >
-              {/* Filters - sidebar on desktop, drawer on mobile */}
               {isDesktop ? (
                 <Paper
                   sx={{
@@ -160,8 +155,6 @@ function App() {
                   </Typography>
                 </Box>
               )}
-
-              {/* Main content */}
               <Box sx={{ flex: 1, width: '100%', minWidth: 0 }}>
                 {loading ? (
                   <Stack spacing={2}>

@@ -1,6 +1,3 @@
-/**
- * Transform Amadeus API response to normalized FlightOffer
- */
 import type { FlightOffer, FlightSegment } from '@/types/flight'
 import type { AmadeusFlightOffer, AmadeusFlightSearchResponse } from './amadeus'
 

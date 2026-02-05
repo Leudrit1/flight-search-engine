@@ -1,8 +1,3 @@
-/**
- * Amadeus Self-Service API - Flight Offers Search
- * https://developers.amadeus.com/self-service/category/flights/api-doc/flight-offers-search
- */
-
 const BASE_URL = 'https://test.api.amadeus.com'
 
 export interface AmadeusFlightOffer {

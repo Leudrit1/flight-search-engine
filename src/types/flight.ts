@@ -1,4 +1,3 @@
-/** Normalized flight offer for display in the app */
 export interface FlightOffer {
   id: string
   origin: string

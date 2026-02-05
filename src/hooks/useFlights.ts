@@ -1,7 +1,3 @@
-/**
- * Centralized state and data fetching for flights
- * Single source of truth: rawFlights + filters → filteredFlights
- */
 import { useState, useCallback, useMemo } from 'react'
 import type { FlightOffer, SearchParams, FilterState } from '@/types/flight'
 import { fetchFlights } from '@/api/flightService'

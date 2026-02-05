@@ -1,7 +1,3 @@
-/**
- * Centralized flight data fetching - single source of truth for API layer.
- * Uses Amadeus when credentials are configured; otherwise returns no flights.
- */
 import type { FlightOffer } from '@/types/flight'
 import type { SearchParams } from '@/types/flight'
 import { searchFlights } from './amadeus'
