@@ -8,10 +8,10 @@ import { searchFlights } from './amadeus'
 import { generateMockFlights } from './mockData'
 import { transformAmadeusToFlightOffer } from './transformers'
 
-const AMADEUS_API_KEY = import.meta.env.VITE_AMADEUS_API_KEY
-const AMADEUS_API_SECRET = import.meta.env.VITE_AMADEUS_API_SECRET
+const clientId = import.meta.env.VITE_AMADEUS_CLIENT_ID
+const clientCredential = import.meta.env.VITE_AMADEUS_CLIENT_CREDENTIAL
 
-const hasAmadeusCredentials = Boolean(AMADEUS_API_KEY && AMADEUS_API_SECRET)
+const hasAmadeusCredentials = Boolean(clientId && clientCredential)
 
 export interface SearchResult {
   flights: FlightOffer[]
@@ -31,8 +31,8 @@ export async function fetchFlights(params: SearchParams): Promise<SearchResult> 
           adults: params.adults ?? 1,
           currencyCode: 'EUR',
         },
-        AMADEUS_API_KEY!,
-        AMADEUS_API_SECRET!
+        clientId!,
+        clientCredential!
       )
 
       const flights = (response.data || []).map((offer) =>
