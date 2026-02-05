@@ -216,7 +216,7 @@ export function FlightSearchForm({
           </Box>
           {recentSearches.length > 0 && (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {recentSearches.map((search: SearchParams, index: number) => (
+              {recentSearches.slice(0, 3).map((search: SearchParams, index: number) => (
                 <Button
                   key={index}
                   size="small"
