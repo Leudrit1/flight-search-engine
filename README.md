@@ -14,29 +14,13 @@ A responsive web app for searching flights, with live price trends and filters t
 
 React 18, Vite, TypeScript, Material UI, MUI DataGrid, Recharts.
 
-## Getting started
+## Project goal
 
-```bash
-npm install
-npm run dev
-```
+This project was primarily a **practice playground** to go deeper into a few specific frontend topics:
 
-## Build
+- Working with a **data-heavy UI** (DataGrid) and keeping a **single source of truth** for filters and derived views.
+- Coordinating **table + chart** so that both respond instantly to the same filter state.
+- Exploring **responsive layout patterns** with MUI (sidebar vs. drawer, spacing, typography) without relying on a design system from Figma.
+- Playing with **UX details** such as loading skeletons, empty states, and small touches like recent searches that make the experience feel more polished.
 
-```bash
-npm run build
-npm run preview
-```
-
-## Project structure
-
-```
-src/
-├── api/           # Data fetching and API client
-├── components/    # UI components
-├── hooks/         # useFlights (state and filtering)
-├── types/
-├── App.tsx
-├── main.tsx
-└── theme.ts
-```
+The code is intentionally structured in a way that makes it easy to extend or refactor (e.g., swapping the API layer, adding new filters, or introducing server-side pagination) so it can serve as a reference for similar dashboards in the future.
