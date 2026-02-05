@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { Box, Container, Typography, Paper, useTheme, useMediaQuery, Alert, Stack } from '@mui/material'
 import { FlightSearchForm } from '@/components/FlightSearchForm/FlightSearchForm'
@@ -92,7 +93,14 @@ function App() {
   )
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 2, md: 4 } }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        py: { xs: 2, md: 4 },
+        px: { xs: 1, md: 0 },
+      }}
+    >
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Box>
