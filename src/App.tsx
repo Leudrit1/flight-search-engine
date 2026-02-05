@@ -1,14 +1,5 @@
-import { useState } from 'react'
-import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  useTheme,
-  useMediaQuery,
-  Alert,
-  Stack,
-} from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Box, Container, Typography, Paper, useTheme, useMediaQuery, Alert, Stack } from '@mui/material'
 import { FlightSearchForm } from '@/components/FlightSearchForm/FlightSearchForm'
 import { FiltersPanel } from '@/components/FiltersPanel/FiltersPanel'
 import { FlightDataGrid } from '@/components/FlightDataGrid/FlightDataGrid'
@@ -17,6 +8,7 @@ import { EmptyState } from '@/components/EmptyState/EmptyState'
 import { FlightGridSkeleton, ChartSkeleton } from '@/components/LoadingSkeleton/LoadingSkeleton'
 import { FiltersDrawer } from '@/components/FiltersDrawer/FiltersDrawer'
 import { useFlights } from '@/hooks/useFlights'
+import type { SearchParams } from '@/types/flight'
 
 function App() {
   const theme = useTheme()
@@ -35,6 +27,55 @@ function App() {
     minPrice,
     maxPrice,
   } = useFlights()
+
+  const [recentSearches, setRecentSearches] = useState<SearchParams[]>([])
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('flight_recent_searches')
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          setRecentSearches(parsed)
+        }
+      }
+    } catch {
+      // ignore localStorage errors
+    }
+  }, [])
+
+  const handleSearch = (params: SearchParams) => {
+    setRecentSearches((prev) => {
+      const normalized: SearchParams = {
+        ...params,
+        origin: params.origin.toUpperCase(),
+        destination: params.destination.toUpperCase(),
+      }
+
+      const withoutDuplicate = prev.filter(
+        (item) =>
+          !(
+            item.origin === normalized.origin &&
+            item.destination === normalized.destination &&
+            item.departureDate === normalized.departureDate &&
+            (item.returnDate || '') === (normalized.returnDate || '') &&
+            (item.adults ?? 1) === (normalized.adults ?? 1)
+          )
+      )
+
+      const next = [normalized, ...withoutDuplicate].slice(0, 5)
+
+      try {
+        localStorage.setItem('flight_recent_searches', JSON.stringify(next))
+      } catch {
+        // ignore storage errors
+      }
+
+      return next
+    })
+
+    search(params)
+  }
 
   const hasSearched = Boolean(lastSearch)
   const hasResults = filteredFlights.length > 0
@@ -64,9 +105,11 @@ function App() {
           </Box>
 
           <FlightSearchForm
-            onSearch={search}
+            onSearch={handleSearch}
             loading={loading}
             lastSearch={lastSearch}
+            recentSearches={recentSearches}
+            onRecentSearchSelect={handleSearch}
           />
 
           {error && (

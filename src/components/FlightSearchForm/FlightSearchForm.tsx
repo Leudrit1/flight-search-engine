@@ -1,13 +1,5 @@
 import { useState } from 'react'
-import {
-  Box,
-  Button,
-  TextField,
-  Paper,
-  Grid,
-  InputAdornment,
-  MenuItem,
-} from '@mui/material'
+import { Box, Button, TextField, Paper, Grid, InputAdornment, MenuItem } from '@mui/material'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
 import FlightLandIcon from '@mui/icons-material/FlightLand'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -19,6 +11,8 @@ interface FlightSearchFormProps {
   onSearch: (params: SearchParams) => void
   loading?: boolean
   lastSearch?: SearchParams | null
+  recentSearches?: SearchParams[]
+  onRecentSearchSelect?: (params: SearchParams) => void
 }
 
 const COMMON_ROUTES: [string, string][] = [
@@ -35,6 +29,8 @@ export function FlightSearchForm({
   onSearch,
   loading = false,
   lastSearch,
+  recentSearches = [],
+  onRecentSearchSelect,
 }: FlightSearchFormProps) {
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -65,6 +61,26 @@ export function FlightSearchForm({
       returnDate,
       adults,
     })
+  }
+
+  const handleRecentClick = (search: SearchParams) => {
+    setOrigin(search.origin)
+    setDestination(search.destination)
+    setDepartureDate(search.departureDate)
+    setReturnDate(search.returnDate ?? '')
+    setAdults(search.adults ?? 1)
+
+    if (typeof onRecentSearchSelect === 'function') {
+      onRecentSearchSelect(search)
+    } else {
+      onSearch({
+        origin: search.origin,
+        destination: search.destination,
+        departureDate: search.departureDate,
+        returnDate: search.returnDate,
+        adults: search.adults ?? 1,
+      })
+    }
   }
 
   return (
@@ -182,20 +198,40 @@ export function FlightSearchForm({
             </Button>
           </Grid>
         </Grid>
-        <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {COMMON_ROUTES.map(([from, to]) => (
-            <Button
-              key={`${from}-${to}`}
-              size="small"
-              variant={origin === from && destination === to ? 'contained' : 'outlined'}
-              onClick={() => {
-                setOrigin(from)
-                setDestination(to)
-              }}
-            >
-              {from} → {to}
-            </Button>
-          ))}
+        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {COMMON_ROUTES.map(([from, to]) => (
+              <Button
+                key={`${from}-${to}`}
+                size="small"
+                variant={origin === from && destination === to ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setOrigin(from)
+                  setDestination(to)
+                }}
+              >
+                {from} → {to}
+              </Button>
+            ))}
+          </Box>
+          {recentSearches.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {recentSearches.map((search: SearchParams, index: number) => (
+                <Button
+                  key={index}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => handleRecentClick(search)}
+                >
+                  {search.origin} → {search.destination} · {search.departureDate}
+                  {search.returnDate ? ` → ${search.returnDate}` : ''}
+                  {search.adults && search.adults > 0
+                    ? ` · ${search.adults} adult${search.adults > 1 ? 's' : ''}`
+                    : ''}
+                </Button>
+              ))}
+            </Box>
+          )}
         </Box>
       </form>
     </Paper>
